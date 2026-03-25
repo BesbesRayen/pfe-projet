@@ -1,0 +1,15 @@
+export { default as SplashScreen } from './SplashScreen';
+export { default as LoginScreen } from './LoginScreen';
+export { default as RegisterScreen } from './RegisterScreen';
+export { default as ForgotPasswordScreen } from './ForgotPasswordScreen';
+export { default as HomeScreen } from './HomeScreen';
+export { default as ProfileScreen } from './ProfileScreen';
+export { default as MyCreditsScreen } from './MyCreditsScreen';
+export { default as InstallmentsScreen } from './InstallmentsScreen';
+export { default as SimulatorScreen } from './SimulatorScreen';
+export { default as MerchantsScreen } from './MerchantsScreen';
+export { default as KycScreen } from './KycScreen';
+export { default as KycStatusScreen } from './KycStatusScreen';
+export { default as RewardsScreen } from './RewardsScreen';
+export { default as SettingsScreen } from './SettingsScreen';
+export { default as MenuScreen } from './MenuScreen';

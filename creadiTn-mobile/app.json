@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "creadiTn-mobile",
+    "slug": "creadiTn-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.creadi.app"
+    },
+    "android": {
+      "package": "com.creadi.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-dev-client",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Creadi a besoin d'accéder à vos photos pour le KYC (CIN).",
+          "cameraPermission": "Creadi a besoin de la caméra pour la selfie KYC."
+        }
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.YOUR_IOS_CLIENT_ID",
+          "webClientId": "YOUR_WEB_CLIENT_ID.apps.googleusercontent.com",
+          "androidClientId": "YOUR_ANDROID_CLIENT_ID.apps.googleusercontent.com"
+        }
+      ]
+    ]
+  }
+}

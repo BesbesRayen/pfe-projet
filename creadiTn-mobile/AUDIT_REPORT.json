@@ -1,0 +1,585 @@
+{
+  "auditDate": "2026-03-23",
+  "projectName": "Creadi Mobile App - React Native",
+  "auditScope": "src/ directory",
+  "summary": {
+    "totalScreens": 20,
+    "totalComponents": 12,
+    "criticalIssues": 2,
+    "mediumIssues": 8,
+    "lowIssues": 5
+  },
+  "unnecessaryFields": [
+    {
+      "screen": "RegisterScreen",
+      "file": "src/screens/RegisterScreen.tsx",
+      "fields": [
+        {
+          "name": "Phone",
+          "reason": "Can be collected during KYC step if needed for advanced features",
+          "severity": "medium",
+          "recommendation": "Make optional or collect during KYC verification process instead",
+          "lineNumbers": [51, 96-101]
+        }
+      ],
+      "totalFieldsCount": 7,
+      "necessaryFields": [
+        "firstName (required for profile)",
+        "lastName (required for profile)",
+        "email (required for auth)",
+        "password (required for security)",
+        "confirmPassword (required for validation)",
+        "acceptCGU (required for legal compliance)"
+      ],
+      "estimatedComplexityToRemove": "low"
+    },
+    {
+      "screen": "KycScreen",
+      "file": "src/screens/KycScreen.tsx",
+      "fields": [
+        {
+          "name": "CIN Manual Number Input",
+          "reason": "Could be extracted from image using OCR instead of manual entry",
+          "severity": "medium",
+          "recommendation": "Implement optional automatic extraction from CIN front image",
+          "lineNumbers": [30, 95-105]
+        }
+      ],
+      "totalFieldsCount": 4,
+      "necessaryFields": [
+        "CIN Front Image (required)",
+        "CIN Back Image (required)",
+        "Selfie (required for liveness check)"
+      ],
+      "estimatedComplexityToRemove": "medium"
+    },
+    {
+      "screen": "ProfileScreen",
+      "file": "src/screens/ProfileScreen.tsx",
+      "fields": [
+        {
+          "name": "Edit Profile submenu",
+          "reason": "Implementation incomplete with only Alert placeholders, no actual edit functionality",
+          "severity": "high",
+          "recommendation": "Complete implementation or remove until ready. Currently shows TODO comments (lines 76-88)",
+          "lineNumbers": [76, 77, 85]
+        }
+      ],
+      "totalFieldsCount": 0,
+      "estimatedComplexityToRemove": "high"
+    }
+  ],
+  "unusedScreens": [
+    {
+      "name": "SustainabilityScreen",
+      "file": "src/screens/SustainabilityScreen.tsx",
+      "navigationPath": "MainStack.Group > Sustainability",
+      "functionality": "Displays hardcoded sustainability stats (paper saved, CO2 reduced, trees planted)",
+      "isEssential": false,
+      "reason": "Promotional content with no real functionality or data integration. Stats are completely hardcoded and not fetched from any API.",
+      "usageCount": 1,
+      "userAccessPath": "Not accessible from main tab navigation - requires modal navigation",
+      "recommendation": "REMOVE - Creates navigation clutter without functional value. If sustainability tracking is planned, defer until backend integration is ready.",
+      "estimatedImpact": "low",
+      "lineNumbers": [1, 60]
+    },
+    {
+      "name": "FeedbackScreen",
+      "file": "src/screens/FeedbackScreen.tsx",
+      "navigationPath": "MainStack.Group > Feedback",
+      "isEssential": false,
+      "functionality": "Simple feedback form with rating and text input, submits via Alert",
+      "reason": "No backend integration, incomplete API connection. Feedback is only shown via Alert, not persisted anywhere.",
+      "usageCount": 1,
+      "userAccessPath": "Modal navigation only - not discoverable from main interface",
+      "recommendation": "CONSIDER REMOVING or complete backend integration. Currently just shows mock confirmation with no data persistence.",
+      "estimatedImpact": "low",
+      "lineNumbers": [1, 100]
+    },
+    {
+      "name": "SupportScreen",
+      "file": "src/screens/SupportScreen.tsx",
+      "navigationPath": "MainStack.Group > Support",
+      "isEssential": false,
+      "functionality": "Displays hardcoded support contact information and placeholder for live chat",
+      "reason": "All contact info is hardcoded. Live chat button has empty onPress handler. No real integration with any support system.",
+      "usageCount": 1,
+      "userAccessPath": "Modal navigation only",
+      "recommendation": "EITHER integrate with real support system OR simplify by embedding contact info in Settings screen",
+      "estimatedImpact": "low-medium",
+      "lineNumbers": [1, 100]
+    },
+    {
+      "name": "HelpScreen",
+      "file": "src/screens/HelpScreen.tsx",
+      "navigationPath": "MainStack.Group > Help",
+      "isEssential": false,
+      "functionality": "FAQ section with hardcoded Q&A content",
+      "reason": "Static content with no backend integration. Could be replaced with web view or simplified in-app help.",
+      "usageCount": 1,
+      "userAccessPath": "Modal navigation only",
+      "recommendation": "REFACTOR: Consider using collapsible sections within ProfileScreen or convert to web view pointing to help center",
+      "estimatedImpact": "low",
+      "lineNumbers": [1, 100]
+    },
+    {
+      "name": "SecurityScreen",
+      "file": "src/screens/SecurityScreen.tsx",
+      "navigationPath": "MainStack.Group > Security",
+      "isEssential": false,
+      "functionality": "Biometric and 2FA toggles without backend implementation",
+      "reason": "UI-only toggles with no actual backend functionality. Changes to toggles don't persist or affect authentication.",
+      "usageCount": 1,
+      "userAccessPath": "Modal navigation only",
+      "recommendation": "EITHER implement backend 2FA/biometric system OR combine with SettingsScreen and remove standalone navigation",
+      "estimatedImpact": "medium",
+      "lineNumbers": [1, 100]
+    }
+  ],
+  "designIssues": [
+    {
+      "issue": "Inconsistent Font Sizes - Hardcoded Values Throughout Codebase",
+      "severity": "medium",
+      "description": "Multiple screens use hardcoded fontSize instead of theme.typography system. This creates maintenance issues and inconsistency.",
+      "examples": [
+        {
+          "file": "src/screens/ForgotPasswordScreen.tsx",
+          "location": "Line 108, 174, 203, 265",
+          "currentStyle": "fontSize: 40, fontSize: 22, fontSize: 20, fontSize: 16",
+          "shouldBe": "Use textStyles.brandName, textStyles.pageTitle, textStyles.cardTitle, textStyles.bodyText"
+        },
+        {
+          "file": "src/screens/PaymentScreen.tsx",
+          "location": "Multiple Lines (194-248)",
+          "currentStyle": "Inline fontSize definitions scattered throughout",
+          "shouldBe": "Centralize in textStyles or component-level constants"
+        },
+        {
+          "file": "src/screens/HomeScreen.tsx",
+          "location": "Line 174",
+          "currentStyle": "fontSize: 24",
+          "shouldBe": "textStyles.pageTitle or custom style constant"
+        },
+        {
+          "file": "src/screens/MerchantsScreen.tsx",
+          "location": "Lines 64, 89, 117",
+          "currentStyle": "fontSize: 18, 12, 32 (hardcoded)",
+          "shouldBe": "Typography system"
+        }
+      ],
+      "files": [
+        "src/screens/ForgotPasswordScreen.tsx",
+        "src/screens/PaymentScreen.tsx",
+        "src/screens/HomeScreen.tsx",
+        "src/screens/MerchantsScreen.tsx"
+      ],
+      "impact": "Inconsistent typography hierarchy, harder to update brand aesthetics globally",
+      "recommendation": "CREATE a comprehensive textStyles mapping for all font sizes used. Update all hardcoded fontSize values to use theme.textStyles.",
+      "estimatedEffort": "medium"
+    },
+    {
+      "issue": "Hardcoded Colors Not Using Theme System",
+      "severity": "medium",
+      "description": "Several inline color definitions don't use the centralized colors theme, making it hard to implement theme switching.",
+      "examples": [
+        {
+          "file": "src/screens/ForgotPasswordScreen.tsx",
+          "line": 125,
+          "currentStyle": "backgroundColor: '#FFF0F0' (hardcoded)",
+          "shouldBe": "colors.dangerBg already exists"
+        },
+        {
+          "file": "src/screens/ForgotPasswordScreen.tsx",
+          "line": 155,
+          "currentStyle": "backgroundColor: '#F0FFF4' (hardcoded)",
+          "shouldBe": "colors.successBg already exists"
+        },
+        {
+          "file": "src/screens/ForgotPasswordScreen.tsx",
+          "line": "191",
+          "currentStyle": "backgroundColor: `${colors.primary}15` (opacity hack)",
+          "shouldBe": "Create primaryLight or primaryTransparent in colors"
+        },
+        {
+          "file": "src/screens/LoginScreen.tsx",
+          "line": "around 194",
+          "currentStyle": "borderColor: '#DADCE0'",
+          "shouldBe": "colors.border or create googleBorderColor"
+        }
+      ],
+      "files": [
+        "src/screens/ForgotPasswordScreen.tsx",
+        "src/screens/LoginScreen.tsx"
+      ],
+      "impact": "Impossible to implement theme switching (dark/light mode) consistently",
+      "recommendation": "Audit all hardcoded hex colors and add missing colors to colors.ts. Replace with theme references.",
+      "estimatedEffort": "low"
+    },
+    {
+      "issue": "Layout Spacing Inconsistencies - Mixed Spacing Standards",
+      "severity": "low",
+      "description": "Some screens use theme spacing (good), others have arbitrary pixel values that don't align with spacing scale.",
+      "examples": [
+        {
+          "file": "src/navigation/AppNavigator.tsx",
+          "line": "70",
+          "currentStyle": "height: 85 (arbitrary)",
+          "shouldBe": "Use spacing constants: spacing.xxxl (32) + spacing.lg (16) + spacing.md (12) = 60"
+        },
+        {
+          "file": "src/screens/PaymentScreen.tsx",
+          "line": "multiple",
+          "currentStyle": "Inline pixel values: marginTop: 16, marginBottom: 8, marginRight: 4",
+          "shouldBe": "map to spacing.md, spacing.sm, spacing.xs"
+        }
+      ],
+      "files": [
+        "src/navigation/AppNavigator.tsx",
+        "src/screens/PaymentScreen.tsx"
+      ],
+      "impact": "Inconsistent visual rhythm, harder to maintain design consistency",
+      "recommendation": "Create helper function to map arbitrary spacing to nearest theme value",
+      "estimatedEffort": "low"
+    },
+    {
+      "issue": "Color Contrast Issues - Some Text on Light Backgrounds",
+      "severity": "low",
+      "description": "Minor contrast issues in a few locations where text color might not meet WCAG AA standards.",
+      "examples": [
+        {
+          "file": "src/components/InstallmentItem.tsx",
+          "line": "around 70",
+          "issue": "Status text uses refText with small font (micro) - may be hard to read",
+          "color": "statusColor (varies)"
+        },
+        {
+          "file": "src/theme/typography.ts",
+          "line": "30-40",
+          "issue": "Some textStyles use hardcoded colors that conflict with theme intent",
+          "example": "'#1A73E8' hardcoded in brandName style instead of colors.primary"
+        }
+      ],
+      "files": [
+        "src/components/InstallmentItem.tsx",
+        "src/theme/typography.ts"
+      ],
+      "impact": "Potential accessibility issues for users with vision impairments",
+      "recommendation": "Audit text-background combinations. Ensure minimum contrast ratio of 4.5:1 for normal text.",
+      "estimatedEffort": "low"
+    },
+    {
+      "issue": "Crowded Layouts - Too Much Content in Some Areas",
+      "severity": "low",
+      "description": "Some scrollable screens pack too much information without breathing room. Content density is high in places.",
+      "examples": [
+        {
+          "file": "src/screens/ProfileScreen.tsx",
+          "section": "Info rows section",
+          "issue": "Multiple infoRow items stacked with minimal padding between items",
+          "recommendation": "Add more vertical spacing between info sections (spacing.lg instead of spacing.md)"
+        },
+        {
+          "file": "src/screens/KycScreen.tsx",
+          "section": "Progress bar + instruction section",
+          "issue": "Text and progress indicators feel cramped",
+          "padding": "spacing.md (12px) might be too small"
+        }
+      ],
+      "files": [
+        "src/screens/ProfileScreen.tsx",
+        "src/screens/KycScreen.tsx"
+      ],
+      "impact": "Reduced readability, cognitive load on user",
+      "recommendation": "Increase spacing between logical sections. Review paddingVertical and marginBottom values.",
+      "estimatedEffort": "low"
+    }
+  ],
+  "componentQuality": {
+    "summary": "All custom components are actively used. No unused components found. However, Toast component is exported but never imported in any screen.",
+    "components": [
+      {
+        "name": "Avatar",
+        "file": "src/components/Avatar.tsx",
+        "status": "USED",
+        "usedIn": ["ProfileScreen"],
+        "complexity": "low",
+        "quality": "good"
+      },
+      {
+        "name": "Badge",
+        "file": "src/components/Badge.tsx",
+        "status": "USED",
+        "usedIn": ["HomeScreen", "MyCreditsScreen", "ProfileScreen", "SustainabilityScreen"],
+        "complexity": "low",
+        "quality": "good"
+      },
+      {
+        "name": "Button",
+        "file": "src/components/Button.tsx",
+        "status": "USED",
+        "usedIn": ["ALL SCREENS"],
+        "complexity": "medium",
+        "quality": "excellent",
+        "features": ["Multiple variants (primary, secondary, danger, ghost)", "Loading states", "Disabled states", "Size options"]
+      },
+      {
+        "name": "Card",
+        "file": "src/components/Card.tsx",
+        "status": "USED",
+        "usedIn": ["ALL SCREENS"],
+        "complexity": "low",
+        "quality": "good"
+      },
+      {
+        "name": "CreditCard",
+        "file": "src/components/CreditCard.tsx",
+        "status": "USED",
+        "usedIn": ["MyCreditsScreen"],
+        "complexity": "medium",
+        "quality": "good",
+        "note": "Specialized component for displaying credit objects with progress"
+      },
+      {
+        "name": "DocumentUpload",
+        "file": "src/components/DocumentUpload.tsx",
+        "status": "USED",
+        "usedIn": ["KycScreen"],
+        "complexity": "medium",
+        "quality": "good",
+        "features": ["Visual upload state indicator", "File name display"]
+      },
+      {
+        "name": "Input",
+        "file": "src/components/Input.tsx",
+        "status": "USED",
+        "usedIn": ["LoginScreen", "RegisterScreen", "ForgotPasswordScreen", "KycScreen"],
+        "complexity": "medium",
+        "quality": "excellent",
+        "features": ["Label support", "Error display", "Password toggle", "Icon support", "Focus states"]
+      },
+      {
+        "name": "InstallmentItem",
+        "file": "src/components/InstallmentItem.tsx",
+        "status": "USED",
+        "usedIn": ["InstallmentsScreen"],
+        "complexity": "medium",
+        "quality": "good",
+        "features": ["Status-based styling", "Penalty display", "Pay button"]
+      },
+      {
+        "name": "Loader",
+        "file": "src/components/Loader.tsx",
+        "status": "USED",
+        "usedIn": ["MANY SCREENS (HomeScreen, ProfileScreen, MyCreditsScreen, KycScreen, etc.)"],
+        "complexity": "low",
+        "quality": "good",
+        "features": ["Full-screen modal option", "Size customization", "Color customization"]
+      },
+      {
+        "name": "ScoreBar",
+        "file": "src/components/ScoreBar.tsx",
+        "status": "USED",
+        "usedIn": ["HomeScreen", "ProfileScreen"],
+        "complexity": "low",
+        "quality": "good",
+        "features": ["Color-coded ranges", "Label customization"]
+      },
+      {
+        "name": "Toast",
+        "file": "src/components/Toast.tsx",
+        "status": "DEFINED_NOT_USED",
+        "usedIn": "NONE",
+        "complexity": "medium",
+        "quality": "good",
+        "note": "Complete ToastProvider implementation with useToast hook exists but is NEVER IMPORTED in any screen. Could be valuable addition if integrated.",
+        "recommendation": "EITHER remove if not needed OR integrate into app for better notification handling (replacing Alert.alert calls)"
+      }
+    ],
+    "unusedComponents": [
+      {
+        "name": "Toast",
+        "reason": "Exported and fully implemented but never imported or used in any screen",
+        "location": "src/components/Toast.tsx",
+        "recommendation": "Remove if unused, or integrate ToastProvider into App.tsx and replace Alert.alert() calls throughout app with toast.show()"
+      }
+    ],
+    "redundantComponents": []
+  },
+  "textReadabilityIssues": [
+    {
+      "issue": "Micro Font Size in Status Text",
+      "severity": "medium",
+      "file": "src/components/InstallmentItem.tsx",
+      "lineNumber": "around 86",
+      "description": "Transaction reference using textStyles.micro (fontSize: 12) might be too small to read comfortably on some devices",
+      "currentCode": "refText: { ...textStyles.micro, color: statusColor, marginTop: spacing.xs, fontWeight: '600' }",
+      "recommendation": "Use textStyles.caption (fontSize: 12 but better weight) or textStyles.label as backup"
+    },
+    {
+      "issue": "Unsafe Color Combinations in Error States",
+      "severity": "medium",
+      "file": "src/screens/ForgotPasswordScreen.tsx",
+      "lineNumber": "138, 148",
+      "description": "Error icon and text color may not have sufficient contrast ratio",
+      "currentCode": "backgroundColor: colors.danger, color: colors.danger",
+      "recommendation": "Add explicit color values ensuring WCAG AA contrast (4.5:1 minimum)"
+    },
+    {
+      "issue": "Font Weight Inconsistency in Micro Text",
+      "severity": "low",
+      "file": "src/theme/typography.ts and throughout app",
+      "description": "Typography.micro defined as fontSize: 12 with no specified weight, causing inconsistency when used with different font weights",
+      "currentCode": "micro: 12 (no weight specified)",
+      "recommendation": "Define micro with default font weight in theme: { fontSize: 12, fontWeight: '400' }"
+    },
+    {
+      "issue": "Large Font on Splash Screen",
+      "severity": "low",
+      "file": "src/screens/SplashScreen.tsx",
+      "lineNumber": "45",
+      "description": "Large emoji/logo icons (fontSize: 32-36) might not render consistently across devices",
+      "currentCode": "logoText: { fontSize: 32 }",
+      "recommendation": "Use dedicated SVG icons instead of emoji for critical UI elements"
+    },
+    {
+      "issue": "Hardcoded Color in Typography",
+      "severity": "medium",
+      "file": "src/theme/typography.ts",
+      "lineNumber": "around 30",
+      "description": "textStyles.brandName has hardcoded color '#1A73E8' instead of using colors.primary",
+      "currentCode": "color: '#1A73E8' (hardcoded)",
+      "recommendation": "Change to: color: colors.primary from imports"
+    }
+  ],
+  "recommendations": {
+    "highPriority": [
+      {
+        "task": "Complete ProfileScreen Edit Profile Implementation",
+        "reason": "Currently shows TODO comments and Alert placeholders only",
+        "estimatedEffort": "medium",
+        "files": ["src/screens/ProfileScreen.tsx"]
+      },
+      {
+        "task": "Integrate Toast Component or Remove It",
+        "reason": "Fully implemented but never used. Replace all Alert.alert() calls with toast.show()",
+        "estimatedEffort": "medium",
+        "files": ["src/components/Toast.tsx", "All screens"]
+      },
+      {
+        "task": "Audit and Fix Hardcoded Font Sizes",
+        "reason": "Multiple screens use hardcoded fontSize instead of theme.typography",
+        "estimatedEffort": "low-medium",
+        "files": [
+          "src/screens/ForgotPasswordScreen.tsx",
+          "src/screens/PaymentScreen.tsx",
+          "src/screens/HomeScreen.tsx",
+          "src/screens/MerchantsScreen.tsx"
+        ]
+      }
+    ],
+    "mediumPriority": [
+      {
+        "task": "Remove or Integrate SustainabilityScreen",
+        "reason": "Promotional content with hardcoded data, no real functionality",
+        "estimatedEffort": "low"
+      },
+      {
+        "task": "Implement Backend for SecurityScreen or Merge with Settings",
+        "reason": "Currently UI-only toggles with no persistence",
+        "estimatedEffort": "medium"
+      },
+      {
+        "task": "Replace Hardcoded Colors with Theme System",
+        "reason": "Some screens have hardcoded hex colors",
+        "estimatedEffort": "low",
+        "files": ["src/screens/ForgotPasswordScreen.tsx", "src/screens/LoginScreen.tsx"]
+      },
+      {
+        "task": "Implement Backend Support for SupportScreen and HelpScreen",
+        "reason": "Currently all content is hardcoded",
+        "estimatedEffort": "medium-high"
+      }
+    ],
+    "lowPriority": [
+      {
+        "task": "Ensure WCAG AA Contrast Compliance",
+        "reason": "Some text-color combinations might not meet AA standards",
+        "estimatedEffort": "low"
+      },
+      {
+        "task": "Increase Visual Spacing in Dense Areas",
+        "reason": "Some screens feel cramped",
+        "estimatedEffort": "low",
+        "files": ["src/screens/ProfileScreen.tsx", "src/screens/KycScreen.tsx"]
+      },
+      {
+        "task": "Make Phone Field Optional in Registration",
+        "reason": "Can be collected during KYC instead",
+        "estimatedEffort": "low"
+      }
+    ]
+  },
+  "codeQualityMetrics": {
+    "screensAnalyzed": 20,
+    "componentsAnalyzed": 12,
+    "filesCovered": 32,
+    "averageFileSize": "medium",
+    "codeConsistency": "good",
+    "designSystemAdherence": "medium-good",
+    "accessibilityCompliance": "medium"
+  },
+  "detailedFindings": {
+    "navigation": {
+      "totalScreens": 20,
+      "authScreens": 3,
+      "tabScreens": 5,
+      "modalScreens": 12,
+      "allScreensAccessible": true,
+      "navigationIssues": [
+        {
+          "issue": "Too many modal screens (12 out of 20)",
+          "impact": "Navigation hierarchy becomes complex, users may not discover secondary features",
+          "solution": "Consider consolidating peripheral features (Help, Support, Feedback, Sustainability) into a single 'More' section"
+        }
+      ]
+    },
+    "forms": {
+      "totalForms": 4,
+      "forms": [
+        {
+          "name": "LoginForm",
+          "fields": ["email", "password"],
+          "fieldCount": 2,
+          "complexity": "minimal",
+          "issues": "None"
+        },
+        {
+          "name": "RegistrationForm",
+          "fields": ["firstName", "lastName", "email", "phone", "password", "confirmPassword", "acceptCGU"],
+          "fieldCount": 7,
+          "complexity": "medium",
+          "issues": ["Phone field could be optional", "Terms acceptance is good for compliance"]
+        },
+        {
+          "name": "ForgotPasswordForm",
+          "fields": ["email"],
+          "fieldCount": 1,
+          "complexity": "minimal",
+          "issues": "None"
+        },
+        {
+          "name": "KycForm",
+          "fields": ["cinFront", "cinBack", "selfie", "cinNumberManual"],
+          "fieldCount": 4,
+          "complexity": "high",
+          "issues": ["Manual CIN entry could leverage OCR from image"]
+        }
+      ]
+    },
+    "stateManagement": {
+      "approach": "Local state with Context API",
+      "context": "AuthContext",
+      "issues": []
+    }
+  }
+}
